@@ -54,6 +54,7 @@ def getListOfAudioFeatures(listOfSongID, sentiment):
         songFeatures.append(audioFeaturesForSong["audio_features"][0]["instrumentalness"])
         songFeatures.append(audioFeaturesForSong["audio_features"][0]["liveness"])
         songFeatures.append(audioFeaturesForSong["audio_features"][0]["tempo"])
+        songFeatures.append(audioFeaturesForSong["audio_features"][0]["valence"])
         songFeatures.append(sentiment)
         listOfAudioFeatures.append(songFeatures)
     return listOfAudioFeatures
@@ -61,7 +62,7 @@ def getListOfAudioFeatures(listOfSongID, sentiment):
 
 def writeFeaturesToFile(featuresFromStep1, featuresFromStep2, featuresFromStep3, featuresFromStep4, filename):
     with open(filename, "w", newline="") as file:
-        header = ["X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "y"]
+        header = ["X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "y"]
         writer = csv.writer(file)
         writer.writerow(header)
         for dataFromStepNMinus1 in range(len(featuresFromStep1)):
@@ -92,20 +93,22 @@ if __name__ == '__main__':
     # 1. Initial positive sentiment songs:
 
     #  Songs from a "happy" genre (designed by Spotify & ranges from slightly positive to extremely positive sentiment)
-    listOfSongID = getListOfSongIDFromGenre(2, "happy")
+    listOfSongID = getListOfSongIDFromGenre(50, "happy")
     # Get song's audio features and pass in expected sentiment
     featuresFromStep1.append(getListOfAudioFeatures(listOfSongID, 1))
 
-    #
-    # print(overallFeatures)
+    print("Step 1 completed - 50 songs with positive sentiment added to data set")
+
     # 2. Initial negative sentiment songs
 
     # Get songs from a "sad" genre (designed by Spotify & ranges from slightly negative to extremely negative sentiment)
-    listOfSongID = getListOfSongIDFromGenre(2, "sad")
+    listOfSongID = getListOfSongIDFromGenre(50, "sad")
     # Get song's audio features and pass in expected sentiment
     featuresFromStep2.append(getListOfAudioFeatures(listOfSongID, 0))
 
-    # All genres on Spotify
+    print("Step 2 completed - 50 songs with negative sentiment added to data set")
+
+    # Genres from Spotify
     genres = ["acoustic", "alt-rock", "alternative", "ambient", "anime", "black-metal",
               "blues",
               "brazil", "british",  "chill", "classical",
@@ -129,17 +132,21 @@ if __name__ == '__main__':
     positiveSentiments = ["nice", "go", "delight", "joy", "smile", "happy", "grin", "plus", "energy",
                           "up", "best"]
     # Going through the nested loops gives 1364 songs
+    count = 0
     AllGenreWithPositiveSentimentSongID = []
     for genre in genres:
         for positiveSentiment in positiveSentiments:
             search = genre + " " + positiveSentiment
             # print(getListOfAudioFeatures(getListOfSongIDFromGenre(1, search), 1))
+            count = count+1
             AllGenreWithPositiveSentimentSongID.append(
                 getListOfAudioFeatures(getListOfSongIDFromGenre(1, search), 1)[0])
     # Get song's audio features and pass in expected sentiment
     featuresFromStep3.append(AllGenreWithPositiveSentimentSongID)
+    print(count)
 
-    # print(overallFeatures)
+    print("Step 3 completed - X songs with positive sentiment added to data set")
+
     # 4. Wide range of negative sentiment songs for all types of genres
 
     # A mix of words with slightly negative, somewhat negative, and extremely negative sentiment
@@ -155,4 +162,8 @@ if __name__ == '__main__':
     # Get song's audio features and pass in expected sentiment
     featuresFromStep4.append(AllGenreWithNegativeSentimentSongID)
 
-    writeFeaturesToFile(featuresFromStep1, featuresFromStep2, featuresFromStep3, featuresFromStep4, "dataset.csv");
+    print("Step 4 completed - 50 songs with negative sentiment added to data set")
+
+    writeFeaturesToFile(featuresFromStep1, featuresFromStep2, featuresFromStep3, featuresFromStep4, "dataset.csv")
+
+    print("Step 5 completed - Wrote data from web scraping into CSV.")
