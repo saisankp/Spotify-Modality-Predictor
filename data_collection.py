@@ -1,4 +1,6 @@
 import os
+import sys
+
 import requests
 from dotenv import load_dotenv
 import csv
@@ -32,13 +34,14 @@ def getListOfSongIDFromGenre(numberOfTracks, genre):
         return listOfSongID
 
 
-# Function getListOfAudioFeatures takes in a list of song ID's and the sentiment (0 or 1). It returns an array,
-# the same size as the input array containing an array of arrays, where each index contains an array filled with
-# audio features for that particular song. Therefore, each element in the array (i.e. song) would contain:
-# [Danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, tempo, valence,
-# sentiment]. This is calculated by using the 'audio-features' functionality of the Spotify API. The function returns -1
-# in error cases (If there is no data available for the song or the input list is empty).
-def getListOfAudioFeatures(listOfSongID, sentiment):
+# Function getListOfAudioFeatures takes in the genre, the word describing the sentiment, list of song ID's and the
+# sentiment (0 or 1). It returns an array,containing an array of arrays, where each index contains an array filled where
+# index 0 is the song URL, index 1 is genre, index 2 is sentiment description, and index 3 onwards are audio features
+# for that particular song. Therefore, each element in the array  (i.e. song) would contain: [Spotify URL, Genre,
+# Sentiment Description, Danceability, Energy, Key, Loudness, Mode, Speechiness, Acousticness, Instrumentalness,
+# Liveness, Tempo, Valence, Sentiment]. This is calculated by using the 'audio-features' functionality of the Spotify
+# API. The function returns -1 in error cases (If there is no data available for the song or the input list is empty).
+def getListOfAudioFeatures(genre, sentimentWord, listOfSongID, sentiment):
     if listOfSongID == [None] or listOfSongID == -1:
         return -1
     else:
@@ -63,6 +66,9 @@ def getListOfAudioFeatures(listOfSongID, sentiment):
             elif audioFeaturesForSong["audio_features"] == [None]:
                 return -1
             else:
+                songFeatures.append("https://open.spotify.com/track/" + str(listOfSongID[indexOfSongID]))
+                songFeatures.append(genre)
+                songFeatures.append(sentimentWord)
                 songFeatures.append(audioFeaturesForSong["audio_features"][0]["danceability"])
                 songFeatures.append(audioFeaturesForSong["audio_features"][0]["energy"])
                 songFeatures.append(audioFeaturesForSong["audio_features"][0]["key"])
@@ -133,7 +139,7 @@ def getListOfSongIDFromGenreAndMood(numberOfTracks, genre, sentiment):
 # Function writeFeaturesToFile takes in features from 4 steps, and writes them into the requested CSV file.
 def writeFeaturesToFile(featuresFromStep1, featuresFromStep2, featuresFromStep3, featuresFromStep4, filename):
     with open(filename, "w", newline="") as file:
-        header = ["X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "y"]
+        header = ["Spotify-Song", "Genre", "Sentiment-Description", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "y"]
         writer = csv.writer(file)
         writer.writerow(header)
         for dataFromStepNMinus1 in range(len(featuresFromStep1)):
@@ -168,7 +174,7 @@ if __name__ == '__main__':
     #  Songs from a "happy" genre (designed by Spotify & ranges from slightly positive to extremely positive sentiment).
     listOfSongID = getListOfSongIDFromGenre(50, "happy")
     # Get song's audio features and pass in expected sentiment.
-    features = getListOfAudioFeatures(listOfSongID, 1)
+    features = getListOfAudioFeatures("happy", "happy", listOfSongID, 1)
     if features != -1:
         featuresFromStep1.append(features)
         print("Step 1 completed - 50 songs with positive sentiment added to data set. (1/5)")
@@ -178,7 +184,7 @@ if __name__ == '__main__':
     # Songs from a "sad" genre (designed by Spotify & ranges from slightly negative to extremely negative sentiment).
     listOfSongID = getListOfSongIDFromGenre(50, "sad")
     # Get song's audio features and pass in expected sentiment.
-    features = getListOfAudioFeatures(listOfSongID, 0)
+    features = getListOfAudioFeatures("sad", "sad", listOfSongID, 0)
     if features != -1:
         featuresFromStep2.append(features)
         print("Step 2 completed - 50 songs with negative sentiment added to data set. (2/5)")
@@ -203,16 +209,16 @@ if __name__ == '__main__':
     # STEP 3. Wide range of positive sentiment songs for all types of genres:
 
     # A mix of words with slightly positive, somewhat positive, and extremely positive sentiment.
-    positiveSentiments = ["nice", "go", "delight", "joy", "smile", "happy", "grin", "plus", "energy", "up", "best"]
+    positiveSentiments = ["nice", "excite", "delight", "joy", "smile", "happy", "grin", "plus", "energy", "up", "best"]
     # Going through the nested loops below generates around 700 songs with positive sentiment.
     AllGenreWithPositiveSentimentSongID = []
     for genre in genres:
         for positiveSentiment in positiveSentiments:
             # Get song's audio features and pass in expected sentiment.
-            features = getListOfAudioFeatures(getListOfSongIDFromGenreAndMood(1, genre, positiveSentiment), 1)
+            features = getListOfAudioFeatures(genre, positiveSentiment, getListOfSongIDFromGenreAndMood(1, genre, positiveSentiment), 1)
             if features != -1:
                 print("Added song features of a song with a genre of " + genre + " and sentiment of " +
-                      positiveSentiment + ".")
+                      positiveSentiment + " (+).")
                 AllGenreWithPositiveSentimentSongID.append(features[0])
     featuresFromStep3.append(AllGenreWithPositiveSentimentSongID)
     print("Step 3 completed - 700+ songs with positive sentiment added to data set. (3/5)")
@@ -227,10 +233,10 @@ if __name__ == '__main__':
     for genre in genres:
         for negativeSentiment in negativeSentiments:
             # Get song's audio features and pass in expected sentiment.
-            features = getListOfAudioFeatures(getListOfSongIDFromGenreAndMood(1, genre, negativeSentiment), 0)
+            features = getListOfAudioFeatures(genre, negativeSentiment, getListOfSongIDFromGenreAndMood(1, genre, negativeSentiment), 0)
             if features != -1:
                 print("Added song features of a song with a genre of " + genre + " and sentiment of " +
-                      negativeSentiment + ".")
+                      negativeSentiment + " (-).")
                 AllGenreWithNegativeSentimentSongID.append(features[0])
     featuresFromStep4.append(AllGenreWithNegativeSentimentSongID)
     print("Step 4 completed - 700+ songs with negative sentiment added to data set. (4/5)")
