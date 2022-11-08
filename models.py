@@ -154,7 +154,7 @@ plt.show()
 #########################################################################
 # kNN classifier with hyper-parameters k=41 & gamma=10 selected via CV  #
 #########################################################################
-x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
+x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 model_knn = KNeighborsClassifier(n_neighbors=41, weights=gaussian_kernel10).fit(x_train, y_train)
 y_pred = model_knn.predict(x_test)
 zipped = zip(x_test[:, 0], y_pred)

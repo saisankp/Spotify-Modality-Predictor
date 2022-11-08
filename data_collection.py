@@ -120,7 +120,7 @@ if __name__ == '__main__':
     for i in progressbar.progressbar(range(20)):
         # Search Spotify to get a list of 50 song ID's from the "happy" genre.
         listOfSongID = getListOfSongIDFromGenre(offset, "happy")
-        # Get the audio features of every song ID, passing in the expected sentiment (1 = positive).
+        # Get the audio features of every song ID, passing in the expected sentiment (+1 = positive).
         features = getListOfAudioFeatures(listOfSongID, 1)
         featuresFromPositiveSentiment.append(features)
         offset = offset + 50
@@ -136,8 +136,8 @@ if __name__ == '__main__':
     for i in progressbar.progressbar(range(20)):
         # Search Spotify to get a list of 50 song ID's from the "sad" genre.
         listOfSongID = getListOfSongIDFromGenre(offset, "sad")
-        # Get the audio features of every song ID, passing in the expected sentiment (0 = negative).
-        features = getListOfAudioFeatures(listOfSongID, 0)
+        # Get the audio features of every song ID, passing in the expected sentiment (-1 = negative).
+        features = getListOfAudioFeatures(listOfSongID, -1)
         featuresFromNegativeSentiment.append(features)
         offset = offset + 50
 
