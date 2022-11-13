@@ -105,12 +105,6 @@ def writeFeaturesToFile(featuresFromStep1, filename):
 
 
 if __name__ == '__main__':
-    # INTRO: For data collection, we want to get a wide range of songs with a wide range of sentiment level for the best
-    # results. Firstly, we want to use the Spotify API to search across Spotify for happy songs within a "happy" genre.
-    # The songs from this search are guaranteed to have varying levels of positive sentiment. Secondly, we want to
-    # use the Spotify API to search across Spotify for sad songs within a "sad" genre. The songs from this search are
-    # guaranteed to have varying levels of negative sentiment. Both of these searches will allow the data to be diverse.
-
     # Load the Spotify API Key from the .env file.
     # (You can get a key from https://developer.spotify.com/console/get-search-item/ by pressing "Get Token")
     load_dotenv()
@@ -139,47 +133,4 @@ if __name__ == '__main__':
         # Add this list audio features to the overall list of features
         featuresFromEveryGenre.append(features)
 
-    # # STEP 3. Write the collected data into the dataset.csv file:
-    # print("\n" + "Step 3: Write 2000 songs with positive and negative sentiment to dataset.csv. (3/3)")
     writeFeaturesToFile(featuresFromEveryGenre, "dataset.csv")
-
-    # # To adhere to the Spotify API limit, we need to break up the API calls in segments of 50 songs per API call.
-    # # We can therefore use a list to append the features of each iteration (hence features of every 50 songs).
-    # featuresFromPositiveSentiment = []
-    # featuresFromNegativeSentiment = []
-    #
-    # # STEP 1. Add 1000 songs with varying levels of positive sentiment:
-    # print("Step 1: Add 1000 songs with positive sentiment to the data set. (1/3)")
-    # time.sleep(0.05)  # Ensure print statement is printed before progress bar.
-    #
-    # # Since Spotify has a limit of 50 songs per API call, we need to increase the offset by 50 for every API call,
-    # # so that we get the next 50 songs for every API call from the Spotify search.
-    # offset = 0
-    #
-    # for i in progressbar.progressbar(range(20)):
-    #     # Search Spotify to get a list of 50 song ID's from the "happy" genre.
-    #     listOfSongID = getListOfSongIDFromGenre(offset, "happy")
-    #     # Get the audio features of every song ID, passing in the expected sentiment (+1 = positive).
-    #     features = getListOfAudioFeatures(listOfSongID, 1)
-    #     featuresFromPositiveSentiment.append(features)
-    #     offset = offset + 50
-    #
-    # # STEP 2. Add 1000 songs with varying levels of negative sentiment:
-    # print("\n" + "Step 2: Add 1000 songs with negative sentiment to the data set. (2/3)")
-    # time.sleep(0.05)  # Ensure print statement is printed before progress bar.
-    #
-    # # Since Spotify has a limit of 50 songs per API call, we need to increase the offset by 50 for every API call,
-    # # so that we get the next 50 songs for every API call from the Spotify search.
-    # offset = 0
-    #
-    # for i in progressbar.progressbar(range(20)):
-    #     # Search Spotify to get a list of 50 song ID's from the "sad" genre.
-    #     listOfSongID = getListOfSongIDFromGenre(offset, "sad")
-    #     # Get the audio features of every song ID, passing in the expected sentiment (-1 = negative).
-    #     features = getListOfAudioFeatures(listOfSongID, -1)
-    #     featuresFromNegativeSentiment.append(features)
-    #     offset = offset + 50
-    #
-    # # STEP 3. Write the collected data into the dataset.csv file:
-    # print("\n" + "Step 3: Write 2000 songs with positive and negative sentiment to dataset.csv. (3/3)")
-    # writeFeaturesToFile(featuresFromPositiveSentiment, featuresFromNegativeSentiment, "dataset.csv")
