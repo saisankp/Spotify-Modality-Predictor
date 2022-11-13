@@ -14,7 +14,8 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import confusion_matrix
 from itertools import combinations
 
-matplotlib.use('TkAgg')
+# uncomment if using m1 machine
+#matplotlib.use('TkAgg')
 
 
 ###############################
@@ -22,33 +23,27 @@ matplotlib.use('TkAgg')
 ###############################
 def plot():
     df = pd.read_csv('dataset.csv', sep=',', header=0)
-    plt.figure(dpi=120)
-    # TODO: CODE FOR PLOTS
 
-    # plt.scatter(df['X1'], df['y'])
-    # plt.title("Dancibility vs Y")
-    # plt.ylabel("Dancibility", fontsize=12)
-    # plt.xlabel("Y", fontsize=12)
+    fig, ax = plt.subplots(2, 2)
+    ax[0][0].scatter(df['X1'], df['y'])
+    ax[0][0].set_title("X1 vs Y")
+    ax[0][1].scatter(df['X2'], df['y'])
+    ax[0][1].set_title("X2 vs Y")
+    ax[1][0].scatter(df['X3'], df['y'])
+    ax[1][0].set_title("X3 vs Y")
+    ax[1][1].scatter(df['X4'], df['y'])
+    ax[1][1].set_title("X4 vs Y")
+    fig.tight_layout()
+    plt.show()
 
-    # plt.scatter(df['X2'], df['y'])
-    # plt.title("Energy vs Y")
-    # plt.ylabel("Y", fontsize=12)
-    # plt.xlabel("Energy", fontsize=12)
-
-    # plt.scatter(df['X3'], df['y'])
-    # plt.title("Key vs Y")
-    # plt.ylabel("Y", fontsize=12)
-    # plt.xlabel("Key", fontsize=12)
-
-    # plt.scatter(df['X4'], df['y'])
-    # plt.title("Loudness vs Y")
-    # plt.ylabel("Y", fontsize=12)
-    # plt.xlabel("Loudness", fontsize=12)
-
-    # ax[1].scatter(df['X2'], df['y'])
-    # ax[1].set_title("Energy vs Y")
-    # ax[2].scatter(df['X3'], df['y'])
-    # ax[2].set_title("Key vs Y")
+    fig, ax = plt.subplots(1, 3)
+    ax[0].scatter(df['X5'], df['y'])
+    ax[0].set_title("X5 vs Y")
+    ax[1].scatter(df['X7'], df['y'])
+    ax[1].set_title("X7 vs Y")
+    ax[2].scatter(df['X8'], df['y'])
+    ax[2].set_title("X8 vs Y")
+    fig.tight_layout()
     plt.show()
 
 
@@ -276,7 +271,7 @@ def choose_SVM_gamma_using_CV(X, Y, x_train, y_train):
 ######################################################################################
 # DO NOT USE PROBABILITY=TRUE ON SVM
 def SVM(x_train, y_train):
-    modelKernalisedSVM = SVC(C=1, kernel='rbf', gamma=3250).fit(x_train, y_train)
+    modelKernalisedSVM = SVC(C=1, kernel='rbf', gamma=3250, probability=True).fit(x_train, y_train)
     return modelKernalisedSVM
 
 
@@ -392,7 +387,8 @@ def select_features_with_best_accuracy():
 
 
 if __name__ == '__main__':
-    # plot()
+    # UNCOMMENT TO SEE DATA PLOT
+    #plot()
     df = pd.read_csv('dataset.csv', sep=',', header=0)
     # overallListOfTupleCombinations, maxKNNAccuracy, maxKNNAccuracyIndex, maxSVMAccuracy, maxSVMAccuracyIndex, maxCombinedAccuracy, maxCombinedAccuracyIndex = select_features_with_best_accuracy()
     # RESULTS:
@@ -408,12 +404,12 @@ if __name__ == '__main__':
     dummyClassifier = baseline(x_train, y_train)
     knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_train, y_train, x_test, y_test)
     # EXPERIMENTS (UNCOMMENT TO RUN):
-    # ROC(model_knn, modelKernalisedSVM, dummyClassifier)
-    # select_k_range(X, Y)
-    # choose_k_using_CV(X, Y)
-    # select_kNN_gamma_range_for_CV(X, Y)
-    # choose_kNN_gamma_using_CV(X,Y)
-    # select_C_range(X, Y, x_train, y_train)
-    # choose_C_using_CV(X, Y, x_train, y_train)
-    # select_SVM_gamma_range_for_CV(X, Y, x_train, y_train)
-    # choose_SVM_gamma_using_CV(X, Y, x_train, y_train)
+    #ROC(model_knn, modelKernalisedSVM, dummyClassifier)
+    #select_k_range(X, Y)
+    #choose_k_using_CV(X, Y)
+    #select_kNN_gamma_range_for_CV(X, Y)
+    #choose_kNN_gamma_using_CV(X,Y)
+    #select_C_range(X, Y, x_train, y_train)
+    #choose_C_using_CV(X, Y, x_train, y_train)
+    #select_SVM_gamma_range_for_CV(X, Y, x_train, y_train)
+    #choose_SVM_gamma_using_CV(X, Y, x_train, y_train)
