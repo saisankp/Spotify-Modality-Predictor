@@ -34,10 +34,8 @@ def getListOfSongIDFromGenre(offset, genre):
         time.sleep(5)
         return getListOfSongIDFromGenre(offset, genre)
     elif len(songs["tracks"]["items"]) == 0:
-        print("GENRE: " + str(genre) + " has NO RESULT")
+        return -1
     else:
-        print(len(songs["tracks"]["items"]))
-        print(genre)
         for track in range(50):
             listOfSongID.append(songs["tracks"]["items"][track]["id"])
         return listOfSongID
@@ -85,6 +83,8 @@ def getListOfAudioFeatures(listOfSongID):
                 songFeatures.append(audioFeaturesForSong["audio_features"][0]["liveness"])
                 songFeatures.append(audioFeaturesForSong["audio_features"][0]["tempo"])
                 songFeatures.append(audioFeaturesForSong["audio_features"][0]["valence"])
+                songFeatures.append(audioFeaturesForSong["audio_features"][0]["duration_ms"])
+                songFeatures.append(audioFeaturesForSong["audio_features"][0]["time_signature"])
                 if audioFeaturesForSong["audio_features"][0]["mode"] == 0:
                     songFeatures.append(-1)
                 elif audioFeaturesForSong["audio_features"][0]["mode"] == 1:
@@ -96,7 +96,7 @@ def getListOfAudioFeatures(listOfSongID):
 # Function writeFeaturesToFile takes in features from 2 steps, and writes them into the requested CSV file.
 def writeFeaturesToFile(featuresFromStep1, filename):
     with open(filename, "w", newline="") as file:
-        header = ["Spotify-Song", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "y"]
+        header = ["Spotify-Song", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "y"]
         writer = csv.writer(file)
         writer.writerow(header)
         for dataFromStepNMinus1 in range(len(featuresFromStep1)):

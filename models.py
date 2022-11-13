@@ -1,6 +1,4 @@
 import warnings
-
-import numpy
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -19,15 +17,13 @@ from itertools import combinations
 matplotlib.use('TkAgg')
 
 
-# print((X))
-
 ###############################
 #        Plot of data         #
 ###############################
 def plot():
     df = pd.read_csv('dataset.csv', sep=',', header=0)
     plt.figure(dpi=120)
-    #TODO: CODE FOR PLOTS
+    # TODO: CODE FOR PLOTS
 
     # plt.scatter(df['X1'], df['y'])
     # plt.title("Dancibility vs Y")
@@ -157,7 +153,7 @@ def gaussian_kernel50(distances):
 ###################################################
 # Cross validating range of gamma values selected #
 ###################################################
-# Conclusion from this function: The best value for gamma is 30.
+# Conclusion from this function: The best value for gamma is 10.
 def choose_kNN_gamma_using_CV(X, Y):
     mean_error = []
     std_error = []
@@ -182,11 +178,11 @@ def choose_kNN_gamma_using_CV(X, Y):
 
 
 #########################################################################
-# kNN classifier with hyper-parameters k=800 & gamma=30 selected via CV #
+# kNN classifier with hyper-parameters k=800 & gamma=10 selected via CV #
 #########################################################################
-#N.B USING WEIGHTS="DISTANCE" MAKES THE KNN MODEL BE 0.74 ACCURATE
+# N.B USING WEIGHTS="DISTANCE" MAKES THE KNN MODEL BE 0.74 ACCURATE
 def kNN(x_train, y_train):
-    model_knn = KNeighborsClassifier(n_neighbors=800, weights=gaussian_kernel30).fit(x_train, y_train)
+    model_knn = KNeighborsClassifier(n_neighbors=800, weights=gaussian_kernel10).fit(x_train, y_train)
     return model_knn
 
 
@@ -198,7 +194,7 @@ def select_C_range(X, Y, x_train, y_train):
     warnings.filterwarnings('ignore', 'Solver terminated early.*')
     mean_error = []
     std_error = []
-    c_range = [0.01, 0.1, 1, 10, 100, 200]
+    c_range = [0.01, 0.1, 1, 2, 10, 100, 200]
     for c in c_range:
         model = SVC(C=c, kernel='rbf', gamma=5, max_iter=1000).fit(x_train, y_train)
         scores = cross_val_score(model, X, Y, cv=5, scoring="f1")
@@ -220,7 +216,7 @@ def choose_C_using_CV(X, Y, x_train, y_train):
     warnings.filterwarnings('ignore', 'Solver terminated early.*')
     mean_error = []
     std_error = []
-    c_range = [0.01, 0.05, 0.1, 0.5, 1, 10]
+    c_range = [0.01, 0.05, 0.1, 0.5, 1, 2, 10]
     for c in c_range:
         model = SVC(C=c, kernel='rbf', gamma=5, max_iter=1000).fit(x_train, y_train)
         scores = cross_val_score(model, X, Y, cv=5, scoring="f1")
@@ -243,7 +239,7 @@ def select_SVM_gamma_range_for_CV(X, Y, x_train, y_train):
     std_error = []
     g_range = [1, 5, 10, 50, 100, 500, 1000, 2000, 3000, 4000, 5000, 6000]
     for g in g_range:
-        model = SVC( kernel='rbf', gamma=g, max_iter=1000).fit(x_train, y_train)
+        model = SVC(kernel='rbf', gamma=g, max_iter=1000).fit(x_train, y_train)
         scores = cross_val_score(model, X, Y, cv=5, scoring="f1")
         mean_error.append(np.array(scores).mean())
         std_error.append(np.array(scores).std())
@@ -274,6 +270,7 @@ def choose_SVM_gamma_using_CV(X, Y, x_train, y_train):
     plt.title("kernalised SVM Classifier Gamma vs F1 Score (Selecting g-range for CV)")
     plt.show()
 
+
 ######################################################################################
 # Kernalised SVM classifier with hyper-parameters C=1 and gamma=3250 selected via CV #
 ######################################################################################
@@ -282,9 +279,11 @@ def SVM(x_train, y_train):
     modelKernalisedSVM = SVC(C=1, kernel='rbf', gamma=3250).fit(x_train, y_train)
     return modelKernalisedSVM
 
+
 def baseline(x_train, y_train):
     dummy = DummyClassifier(strategy="uniform").fit(x_train, y_train)
     return dummy
+
 
 #################################################################################
 # Confusion Matrix for kNN classifier where k=1 (selected via cross validation) #
@@ -330,9 +329,10 @@ def ROC(model_knn, modelKernalisedSVM, dummy):
         plt.plot([0, 1], [0, 1], color="green", linestyle="--")
         plt.show()
 
+
 def select_features_with_best_accuracy():
     df = pd.read_csv('dataset.csv', sep=',', header=0)
-    features = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'X10']
+    features = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'X10', 'X11', 'X12']
     tmp = []
     for i in range(len(features)):
         oc = combinations(features, i + 1)
@@ -344,26 +344,29 @@ def select_features_with_best_accuracy():
         for oneFeature in range(len(tmp[combination])):
             tupleCombination += (df[tmp[combination][oneFeature]],)
         overallListOfTupleCombinations.append(tupleCombination)
-
+    maxKNNAccuracy = 0
+    maxKNNAccuracyIndex = 0
+    maxSVMAccuracy = 0
+    maxSVMAccuracyIndex = 0
+    maxCombinedAccuracy = 0
+    maxCombinedAccuracyIndex = 0
     for oneCombination in range(len(overallListOfTupleCombinations)):
-        maxKNNAccuracy = 0
-        maxKNNAccuracyIndex = 0
-        maxSVMAccuracy = 0
-        maxSVMAccuracyIndex = 0
-        maxCombinedAccuracy = 0
-        maxCombinedAccuracyIndex = 0
         print("USING COMBINATION INDEX: " + str(oneCombination))
         if len(overallListOfTupleCombinations[oneCombination]) == 1:
             X = np.array(np.column_stack(overallListOfTupleCombinations[oneCombination])).reshape(-1, 1)
         else:
             X = np.column_stack(overallListOfTupleCombinations[oneCombination])
+
         Y = df['y']
         x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
-        model_knn = kNN(x_train, y_train, x_test)
-        modelKernalisedSVM = SVM(x_train, y_train, x_test)
-        knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, x_train, y_train,
-                                                                  x_test, y_test)
+        model_knn = kNN(x_train, y_train)
+        modelKernalisedSVM = SVM(x_train, y_train)
+        dummyClassifier = baseline(x_train, y_train)
+        knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_train, y_train, x_test, y_test)
         combinedAccuracy = knnAccuracy + SVMAccuracy
+        print(combinedAccuracy)
+        print(knnAccuracy)
+        print(SVMAccuracy)
         if combinedAccuracy > maxCombinedAccuracy:
             print("NEW COMBINED ACCURACY FOUND: " + str(combinedAccuracy))
             maxCombinedAccuracy = combinedAccuracy
@@ -378,33 +381,34 @@ def select_features_with_best_accuracy():
             print("NEW SVM ACCURACY FOUND: " + str(SVMAccuracy))
             maxSVMAccuracy = SVMAccuracy
             maxSVMAccuracyIndex = oneCombination
+
     print("THE MAXIMUM KNN ACCURACY OF " + str(maxKNNAccuracy) + " HAPPENED AT INDEX " + str(
         maxKNNAccuracyIndex))
     print("THE MAXIMUM SVM ACCURACY OF " + str(maxSVMAccuracy) + " HAPPENED AT INDEX " + str(
         maxSVMAccuracyIndex))
-    print("THE MAXIMUM COMBINED ACCURACY OF " + str(maxCombinedAccuracy) + " HAPPENED AT INDEX " + str(maxCombinedAccuracyIndex))
+    print("THE MAXIMUM COMBINED ACCURACY OF " + str(maxCombinedAccuracy) + " HAPPENED AT INDEX " + str(
+        maxCombinedAccuracyIndex))
     return overallListOfTupleCombinations, maxKNNAccuracy, maxKNNAccuracyIndex, maxSVMAccuracy, maxSVMAccuracyIndex, maxCombinedAccuracy, maxCombinedAccuracyIndex
 
 
 if __name__ == '__main__':
     # plot()
     df = pd.read_csv('dataset.csv', sep=',', header=0)
-    #  overallListOfTupleCombinations, maxKNNAccuracy, maxKNNAccuracyIndex, maxSVMAccuracy, maxSVMAccuracyIndex, maxCombinedAccuracy, maxCombinedAccuracyIndex = select_features_with_best_accuracy()
+    # overallListOfTupleCombinations, maxKNNAccuracy, maxKNNAccuracyIndex, maxSVMAccuracy, maxSVMAccuracyIndex, maxCombinedAccuracy, maxCombinedAccuracyIndex = select_features_with_best_accuracy()
     # RESULTS:
-    # THE MAXIMUM KNN ACCURACY OF 0.7403508771929824 HAPPENED AT INDEX 951 [Hence Features X2, X3, X6, X7, X8, X9, 10]
-    # THE MAXIMUM SVM ACCURACY OF 0.6798245614035088 HAPPENED AT INDEX 29 [Hence Features X3, X6]
-    # THE MAXIMUM COMBINED ACCURACY OF 1.3921052631578947 HAPPENED AT INDEX 651 [Hence Features X1, X2, X3, X4, X9, X10]
+    # THE MAXIMUM KNN ACCURACY OF 0.7508771929824561 HAPPENED AT INDEX 2515 [Hence features X1, X2, X3, X4, X5, X7, X8]
+    # THE MAXIMUM SVM ACCURACY OF 0.7947368421052632 HAPPENED AT INDEX 832 [Hence features X1, X2, X4, X5, X9]
+    # THE MAXIMUM COMBINED ACCURACY OF 1.5447368421052632 HAPPENED AT INDEX 2515 [Hence features X1, X2, X3, X4, X5, X7, X8]
 
-    X = np.column_stack( (df['X1'], df['X2'], df['X3'], df['X4'], df['X5'], df['X6'], df['X7'], df['X8'], df['X9'], df['X10']))
+    X = np.column_stack((df['X1'], df['X2'], df['X3'], df['X4'], df['X5'], df['X7'], df['X8']))
     Y = df['y']
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
     model_knn = kNN(x_train, y_train)
     modelKernalisedSVM = SVM(x_train, y_train)
     dummyClassifier = baseline(x_train, y_train)
-    knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_train, y_train, x_test,
-                                                              y_test)
-    # ROC(model_knn, modelKernalisedSVM, dummyClassifier)
+    knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_train, y_train, x_test, y_test)
     # EXPERIMENTS (UNCOMMENT TO RUN):
+    # ROC(model_knn, modelKernalisedSVM, dummyClassifier)
     # select_k_range(X, Y)
     # choose_k_using_CV(X, Y)
     # select_kNN_gamma_range_for_CV(X, Y)
@@ -413,4 +417,3 @@ if __name__ == '__main__':
     # choose_C_using_CV(X, Y, x_train, y_train)
     # select_SVM_gamma_range_for_CV(X, Y, x_train, y_train)
     # choose_SVM_gamma_using_CV(X, Y, x_train, y_train)
-
