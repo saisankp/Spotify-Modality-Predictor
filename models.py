@@ -19,7 +19,7 @@ matplotlib.use('TkAgg')
 #############################################
 
 df = pd.read_csv('dataset.csv', sep=',', header=0)
-X = np.column_stack((df['X1'], df['X2'], df['X3']))
+X = np.column_stack((df['X1'], df['X2'], df['X3'], df['X4'], df['X5'], df['X6'], df['X7'], df['X8'], df['X9'], df['X10']))
 Y = df['y']
 
 ###############################
