@@ -15,7 +15,7 @@ from sklearn.metrics import confusion_matrix
 from itertools import combinations
 
 # uncomment if using m1 machine
-#matplotlib.use('TkAgg')
+matplotlib.use('TkAgg')
 
 
 ###############################
@@ -326,6 +326,20 @@ def ROC(model_knn, modelKernalisedSVM, dummy):
 
 
 def select_features_with_best_accuracy():
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(96, 64))
+    ax[0].set_title("Kernalized SVM Accuracy vs feature combination index", fontsize=17)
+    ax[0].set_xlabel("Index of feature combination", fontsize=13)
+    ax[0].set_ylabel("Kernalized SVM Accuracy", fontsize=13)
+
+    ax[1].set_title("kNN Accuracy vs feature combination index", fontsize=17)
+    ax[1].set_xlabel("Index of feature combination", fontsize=13)
+    ax[1].set_ylabel("kNN Accuracy", fontsize=13)
+    plt.subplots_adjust(left=0.1,
+                        bottom=0.1,
+                        right=0.9,
+                        top=0.9,
+                        wspace=0.4,
+                        hspace=0.4)
     df = pd.read_csv('dataset.csv', sep=',', header=0)
     features = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'X10', 'X11', 'X12']
     tmp = []
@@ -376,6 +390,11 @@ def select_features_with_best_accuracy():
             print("NEW SVM ACCURACY FOUND: " + str(SVMAccuracy))
             maxSVMAccuracy = SVMAccuracy
             maxSVMAccuracyIndex = oneCombination
+        ax[0].plot(oneCombination, SVMAccuracy, c="red", marker="x")
+        ax[1].plot(oneCombination, knnAccuracy, c="green", marker="x")
+
+    fig.show()
+    fig.waitforbuttonpress()
 
     print("THE MAXIMUM KNN ACCURACY OF " + str(maxKNNAccuracy) + " HAPPENED AT INDEX " + str(
         maxKNNAccuracyIndex))
@@ -390,19 +409,28 @@ if __name__ == '__main__':
     # UNCOMMENT TO SEE DATA PLOT
     #plot()
     df = pd.read_csv('dataset.csv', sep=',', header=0)
-    # overallListOfTupleCombinations, maxKNNAccuracy, maxKNNAccuracyIndex, maxSVMAccuracy, maxSVMAccuracyIndex, maxCombinedAccuracy, maxCombinedAccuracyIndex = select_features_with_best_accuracy()
+    overallListOfTupleCombinations, maxKNNAccuracy, maxKNNAccuracyIndex, maxSVMAccuracy, maxSVMAccuracyIndex, maxCombinedAccuracy, maxCombinedAccuracyIndex = select_features_with_best_accuracy()
     # RESULTS:
     # THE MAXIMUM KNN ACCURACY OF 0.7508771929824561 HAPPENED AT INDEX 2515 [Hence features X1, X2, X3, X4, X5, X7, X8]
     # THE MAXIMUM SVM ACCURACY OF 0.7947368421052632 HAPPENED AT INDEX 832 [Hence features X1, X2, X4, X5, X9]
     # THE MAXIMUM COMBINED ACCURACY OF 1.5447368421052632 HAPPENED AT INDEX 2515 [Hence features X1, X2, X3, X4, X5, X7, X8]
 
-    X = np.column_stack((df['X1'], df['X2'], df['X3'], df['X4'], df['X5'], df['X7'], df['X8']))
-    Y = df['y']
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
-    model_knn = kNN(x_train, y_train)
-    modelKernalisedSVM = SVM(x_train, y_train)
-    dummyClassifier = baseline(x_train, y_train)
-    knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_train, y_train, x_test, y_test)
+    # THE MAXIMUM KNN ACCURACY OF 0.7508771929824561 HAPPENED AT INDEX 3072
+    # THE MAXIMUM SVM ACCURACY OF 0.7859649122807018 HAPPENED AT INDEX 1686
+    # THE MAXIMUM COMBINED ACCURACY OF 1.5140350877192983 HAPPENED AT INDEX 3852
+
+    # THE MAXIMUM KNN ACCURACY OF 0.7508771929824561 HAPPENED AT INDEX 2877
+    # THE MAXIMUM SVM ACCURACY OF 0.7921052631578948 HAPPENED AT INDEX 2751
+    # THE MAXIMUM COMBINED ACCURACY OF 1.5280701754385966 HAPPENED AT INDEX 2877
+
+    # X = np.column_stack((df['X1'], df['X2'], df['X3'], df['X4'], df['X5'], df['X7'], df['X8'], df['X12']))
+    # Y = df['y']
+    # x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
+    # model_knn = kNN(x_train, y_train)
+    # modelKernalisedSVM = SVM(x_train, y_train)
+    # dummyClassifier = baseline(x_train, y_train)
+    # knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_train, y_train, x_test, y_test)
+
     # EXPERIMENTS (UNCOMMENT TO RUN):
     #ROC(model_knn, modelKernalisedSVM, dummyClassifier)
     #select_k_range(X, Y)
