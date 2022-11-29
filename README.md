@@ -1,4 +1,4 @@
-# Spotify-Sentiment-Analysis
+# Spotify Modality Predictor
 Group 72 Project for CSU44061 (Machine Learning)
 
 ## Group Members
