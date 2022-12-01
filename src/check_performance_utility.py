@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import roc_curve, classification_report
 from sklearn.metrics import auc
-from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 
 
@@ -12,7 +11,8 @@ def baseline(x_train, y_train):
     return dummy
 
 
-# Get confusion matrices and classification reports (accuracy, precision, recall, f1-score, support) for kNN, kernalised SVM, and dummy classifiers.
+# Get confusion matrices and classification reports (accuracy, precision, recall, f1-score, support) for kNN,
+# kernalised SVM, and dummy classifiers.
 def ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_test, y_test):
     # Confusion matrix and accuracy for kNN classifier.
     y_pred = model_knn.predict(x_test)
