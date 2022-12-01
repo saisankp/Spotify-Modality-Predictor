@@ -54,7 +54,7 @@ def choose_C_using_CV(X, Y, x_train, y_train):
 def select_SVM_gamma_range_for_CV(X, Y, x_train, y_train):
     mean_error = []
     std_error = []
-    g_range = [1, 5, 10, 50, 100, 500, 1000, 2000, 3000, 4000, 5000, 6000]
+    g_range = [1, 5, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600]
     for g in g_range:
         model = SVC(C=0.6, kernel='rbf', gamma=g, max_iter=10000).fit(x_train, y_train)
         scores = cross_val_score(model, X, Y, cv=5, scoring="f1")
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     X = np.column_stack((df['X1'], df['X3'], df['X6'], df['X8'], df['X9'], df['X10']))
     Y = df['y']
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
-    select_C_range(X, Y, x_train, y_train)
-    choose_C_using_CV(X, Y, x_train, y_train)
+    #select_C_range(X, Y, x_train, y_train)
+    #choose_C_using_CV(X, Y, x_train, y_train)
     select_SVM_gamma_range_for_CV(X, Y, x_train, y_train)
     choose_SVM_gamma_using_CV(X, Y, x_train, y_train)
