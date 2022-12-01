@@ -21,7 +21,7 @@
 ## How can I get started running this project locally?
   1. To setup the .env file, run `bash setupEnv.sh` and input your Spotify API key (only necessary if you want to use the file data_collection.py). This will make a .env file inside of the src directory.
   2. If you use PyCharm, it will help you download all necessary libraries such as scikit-learn. However, the progress bar library might struggle to install, in which case you can simply run `pip install progressbar2` to install it.
-  3. To run any python file, you can use PyCharm or simply run `python3 nameOfFile.py` to execute it.
+  3. To run any python file, you can use PyCharm or simply run `python3 main.py` for example to execute it.
 
 ## Group 72 Members
 
