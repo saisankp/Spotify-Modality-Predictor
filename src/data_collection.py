@@ -133,4 +133,4 @@ if __name__ == '__main__':
         # Add this list audio features to the overall list of features
         featuresFromEveryGenre.append(features)
 
-    writeFeaturesToFile(featuresFromEveryGenre, "./data/dataset.csv")
+    writeFeaturesToFile(featuresFromEveryGenre, "../data/dataset.csv")

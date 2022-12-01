@@ -107,7 +107,7 @@ def kNN(x_train, y_train):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('./data/dataset.csv', sep=',', header=0)
+    df = pd.read_csv('../data/dataset.csv', sep=',', header=0)
     X = np.column_stack((df['X1'], df['X3'], df['X6'], df['X8'], df['X9'], df['X10']))
     Y = df['y']
     select_k_range(X, Y)

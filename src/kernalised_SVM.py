@@ -61,9 +61,9 @@ def select_SVM_gamma_range_for_CV(X, Y, x_train, y_train):
         mean_error.append(np.array(scores).mean())
         std_error.append(np.array(scores).std())
     plt.errorbar(g_range, mean_error, yerr=std_error, linewidth=3)
-    plt.xlabel("g")
+    plt.xlabel("Gamma")
     plt.ylabel("F1 Score")
-    plt.title("kernalised SVM Classifier Gamma vs F1 Score (Selecting g-range for CV)")
+    plt.title("kernalised SVM Classifier gamma vs F1 Score (Selecting g-range for CV)")
     plt.show()
 
 
@@ -79,9 +79,9 @@ def choose_SVM_gamma_using_CV(X, Y, x_train, y_train):
         mean_error.append(np.array(scores).mean())
         std_error.append(np.array(scores).std())
     plt.errorbar(g_range, mean_error, yerr=std_error, linewidth=3)
-    plt.xlabel("g")
+    plt.xlabel("Gamma")
     plt.ylabel("F1 Score")
-    plt.title("kernalised SVM Classifier Gamma vs F1 Score (Selecting g-range for CV)")
+    plt.title("kernalised SVM Classifier gamma vs F1 Score (Selecting g-range for CV)")
     plt.show()
 
 
@@ -93,7 +93,7 @@ def SVM(x_train, y_train):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('./data/dataset.csv', sep=',', header=0)
+    df = pd.read_csv('../data/dataset.csv', sep=',', header=0)
     X = np.column_stack((df['X1'], df['X3'], df['X6'], df['X8'], df['X9'], df['X10']))
     Y = df['y']
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
