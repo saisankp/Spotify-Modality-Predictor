@@ -4,9 +4,13 @@ import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from itertools import combinations
+from kNN import kNN
+from kernalised_SVM import SVM
+from check_performance_utility import baseline, ConfusionMatrix
 
 # Comment the line below if you are not using an M1 (ARM-based) machine
 matplotlib.use('TkAgg')
+
 
 # Feature selection #1 (plotting features vs target value to see their dependence)
 # Conclusion from this function: Features X1, X2, X3, X4, X6, X8, X9 and X10 are dependent features
@@ -107,6 +111,7 @@ def select_features_with_dependency():
     # Show subplots with X9, X10, X11, and X12
     plt.show()
 
+
 # Feature selection #2 (brute forcing every combination of feature combinations to get the highest accuracy)
 # Conclusion from this function (resulting plot in report):
 # 1. The maximum kNN accuracy of 0.7508771929824561 happened at index 2877 [X1, X3, X6, X8, X9, X10, X12]
@@ -141,7 +146,8 @@ def select_features_with_best_accuracy():
         overallListOfTupleCombinationsWithDataFrame.append(tupleCombination)
         overallListOfTupleCombinationsWithNoDataFrame.append(tupleNames)
 
-    print(len(overallListOfTupleCombinationsWithDataFrame))
+    print("Process of iterating through " + str(
+        len(overallListOfTupleCombinationsWithDataFrame)) + " combinations has started.")
     # With all combinations, train kernalised SVM and kNN classifiers to get index with the best accuracy
     maxKNNAccuracy = 0
     maxKNNAccuracyIndex = 0
