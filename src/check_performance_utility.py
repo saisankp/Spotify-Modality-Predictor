@@ -33,6 +33,7 @@ def ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_test, y_te
     dummyAccuracy = accuracy_score(y_test, ydummy)
     return knnAccuracy, SVMAccuracy, dummyAccuracy
 
+
 # Plot ROC curve for kNN, kernalised SVM, and dummy classifiers.
 def ROC(x_test, y_test, model_knn, modelKernalisedSVM, dummy):
     knn = "kNN Classifier ROC"

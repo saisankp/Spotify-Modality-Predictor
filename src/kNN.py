@@ -107,10 +107,10 @@ def kNN(x_train, y_train):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('dataset.csv', sep=',', header=0)
+    df = pd.read_csv('./data/dataset.csv', sep=',', header=0)
     X = np.column_stack((df['X1'], df['X3'], df['X6'], df['X8'], df['X9'], df['X10']))
     Y = df['y']
-    # select_k_range(X, Y)
-    # choose_k_using_CV(X, Y)
-    # select_kNN_gamma_range_for_CV(X, Y)
-    # choose_kNN_gamma_using_CV(X, Y)
+    select_k_range(X, Y)
+    choose_k_using_CV(X, Y)
+    select_kNN_gamma_range_for_CV(X, Y)
+    choose_kNN_gamma_using_CV(X, Y)

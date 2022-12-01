@@ -16,7 +16,7 @@ matplotlib.use('TkAgg')
 # Conclusion from this function: Features X1, X2, X3, X4, X6, X8, X9 and X10 are dependent features
 def select_features_with_dependency():
     # Use 20 songs (with 10 major songs, and 10 minor songs) from the first 50 songs in dataset.csv
-    df = pd.read_csv('data_for_dependency_graphs.csv', sep=',', header=0)
+    df = pd.read_csv('./data/data_for_dependency_graphs.csv', sep=',', header=0)
     # Setup plots
     plt.rcParams['axes.labelsize'] = 20
     plt.rcParams['axes.titlesize'] = 20
@@ -128,7 +128,7 @@ def select_features_with_best_accuracy():
     plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.4, hspace=0.4)
 
     # Get every combination of 12 features (X1 -> X12)
-    df = pd.read_csv('dataset.csv', sep=',', header=0)
+    df = pd.read_csv('./data/dataset.csv', sep=',', header=0)
     features = ['X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'X10', 'X11', 'X12']
     tmp = []
     for i in range(len(features)):

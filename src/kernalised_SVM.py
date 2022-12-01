@@ -93,11 +93,11 @@ def SVM(x_train, y_train):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('dataset.csv', sep=',', header=0)
+    df = pd.read_csv('./data/dataset.csv', sep=',', header=0)
     X = np.column_stack((df['X1'], df['X3'], df['X6'], df['X8'], df['X9'], df['X10']))
     Y = df['y']
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
-    # select_C_range(X, Y, x_train, y_train)
-    # choose_C_using_CV(X, Y, x_train, y_train)
-    # select_SVM_gamma_range_for_CV(X, Y, x_train, y_train)
-    # choose_SVM_gamma_using_CV(X, Y, x_train, y_train)
+    select_C_range(X, Y, x_train, y_train)
+    choose_C_using_CV(X, Y, x_train, y_train)
+    select_SVM_gamma_range_for_CV(X, Y, x_train, y_train)
+    choose_SVM_gamma_using_CV(X, Y, x_train, y_train)
