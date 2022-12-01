@@ -85,7 +85,6 @@ def choose_SVM_gamma_using_CV(X, Y, x_train, y_train):
     plt.show()
 
 
-#
 # Kernalised SVM classifier with chosen hyperparameters C=0.6 & gamma=100 selected via cross-validation
 def SVM(x_train, y_train):
     modelKernalisedSVM = SVC(C=0.6, kernel='rbf', gamma=100, probability=True).fit(x_train, y_train)

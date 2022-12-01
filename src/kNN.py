@@ -76,7 +76,6 @@ def select_kNN_gamma_range_for_CV(X, Y):
 
 
 # Cross validation on range of gamma values selected previously (10 to 50)
-###################################################
 # Conclusion from this function: The best value for gamma is 30.
 def choose_kNN_gamma_using_CV(X, Y):
     mean_error = []
