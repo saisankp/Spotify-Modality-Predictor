@@ -122,7 +122,7 @@ if __name__ == '__main__':
               "party", "piano", "pop", "pop-film", "power-pop", "progressive-house",
               "psych-rock", "punk", "punk-rock", "r-n-b", "reggae", "reggaeton", "rock",
               "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes",
-              "singer-songwriter", "ska", "sleep", "songwriter", "soul",  "spanish", "study",
+              "singer-songwriter", "ska", "sleep", "songwriter", "soul", "spanish", "study",
               "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "world-music"]
     featuresFromEveryGenre = []
     for i in progressbar.progressbar(range(len(genres))):

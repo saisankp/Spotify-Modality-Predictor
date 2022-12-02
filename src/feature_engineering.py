@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from itertools import combinations
 from kNN import kNN
 from kernalised_SVM import SVM
-from check_performance_utility import baseline, ConfusionMatrix
+from check_performance_utility import baseline, compareModels
 
 # Comment the line below if you are not using an M1 (ARM-based) machine
 matplotlib.use('TkAgg')
@@ -163,14 +163,14 @@ def select_features_with_best_accuracy():
         else:
             X = np.column_stack(overallListOfTupleCombinationsWithDataFrame[oneCombination])
 
-        # Calculate the confusion matrix and accuracy from this particular combination of features.
+        # Calculate accuracy from this particular combination of features.
         Y = df['y']
-        x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
+        x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
         model_knn = kNN(x_train, y_train)
         modelKernalisedSVM = SVM(x_train, y_train)
         dummyClassifier = baseline(x_train, y_train)
-        knnAccuracy, SVMAccuracy, dummyAccuracy = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier,
-                                                                  x_train, y_train, x_test, y_test)
+        knnAccuracy, SVMAccuracy, dummyAccuracy = compareModels(model_knn, modelKernalisedSVM, dummyClassifier, x_test,
+                                                                y_test)
         combinedAccuracy = knnAccuracy + SVMAccuracy
         if combinedAccuracy > maxCombinedAccuracy:
             print("A new maximum combined accuracy was found: " + str(combinedAccuracy))

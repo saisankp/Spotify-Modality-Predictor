@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from kNN import kNN
 from kernalised_SVM import SVM
-from check_performance_utility import baseline, ConfusionMatrix, ROC
+from check_performance_utility import baseline, compareModels, ROC
 
 if __name__ == '__main__':
     df = pd.read_csv('../data/dataset.csv', sep=',', header=0)
@@ -13,5 +13,6 @@ if __name__ == '__main__':
     model_knn = kNN(x_train, y_train)
     modelKernalisedSVM = SVM(x_train, y_train)
     dummyClassifier = baseline(x_train, y_train)
-    kNNClassificationReport, SVMClassificationReport, dummyClassificationReport = ConfusionMatrix(model_knn, modelKernalisedSVM, dummyClassifier, x_test, y_test)
+    kNNAccuracy, kernalisedSVMAccuracy, dummyAccuracy = compareModels(model_knn, modelKernalisedSVM, dummyClassifier,
+                                                                      x_test, y_test)
     ROC(x_test, y_test, model_knn, modelKernalisedSVM, dummyClassifier)
