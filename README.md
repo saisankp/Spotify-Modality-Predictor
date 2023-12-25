@@ -8,8 +8,8 @@
 ## What machine learning models does this project use?
 
   1. kNN classifier (k-nearest neighbours).
-  2. Kernalised SVM (support vector machine).
-  
+  2. Kernelized SVM (support vector machine).
+ 
   
 ## What do I need before I run the project?
 
